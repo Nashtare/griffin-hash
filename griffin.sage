@@ -166,6 +166,7 @@ def griffin_permutation(parameters, state):
         state = linear_layer(parameters, state)
         state = additive_constants_layer(parameters, state, i)
 
+    # for the last round, we do not add any round constants to the state
     state = nonlinear_layer(parameters, state)
     state = linear_layer(parameters, state)
 
@@ -178,6 +179,7 @@ def griffin_sponge(parameters, input_sequence, output_length):
     Fp = FiniteField(p)
 
     length = len(input_sequence)
+    # padding the input length with zeros
     while len(input_sequence) % rate != 0:
         input_sequence.append(0)
 
@@ -217,7 +219,7 @@ t = 8  # Number of base field elements
 c = 4  # Number of elements dedicated to the capacity
 p, t, capacity, security_level, d, dinv, N, mat, alphas, betas, round_constants = griffin_parameters(
     p, t, c, S)
-# The mat matrix is changed for optimized mat layer in the frequency domain
+# The MDS matrix is changed for optimized linear layer in the frequency domain
 # See https://github.com/novifinancial/winterfell/pull/104
 mat = matrix.circulant([23, 8, 13, 10, 7, 6, 21, 8])
 parameters = p, t, capacity, security_level, d, dinv, N, mat, alphas, betas, round_constants
