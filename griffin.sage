@@ -179,14 +179,18 @@ def griffin_sponge(parameters, input_sequence, output_length):
     Fp = FiniteField(p)
 
     length = len(input_sequence)
-    # padding the input length with zeros
+
+    # initialize state to all zeros then conditionally set the first capacity register to one
+    state = matrix([[Fp(0)] for i in range(t)])
+    if length % rate != 0:
+        state[capacity, 0] += 1
+
+    if length % rate != 0:
+        input_sequence.append(1)
+
+    # we finish the simplest padding rule by appending zeros as necessary
     while len(input_sequence) % rate != 0:
         input_sequence.append(0)
-
-    # initialize state to all zeros, except for the first capacity register
-    # indicating the length of the sequence to hash, before padding with zeros
-    state = matrix([[Fp(0)] for i in range(t)])
-    state[capacity, 0] = length
 
     # absorbing
     absorb_index = 0
