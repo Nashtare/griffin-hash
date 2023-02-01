@@ -54,9 +54,8 @@ def get_number_of_rounds(p, t, security_level, d):
         if min(left, right) >= target:
             break
 
-    # set a minimum value for sanity and add 15%
-    # NOTE: the original paper recommends 20%
-    return ceil(1.15 * max(6, 1 + rgb))
+    # set a minimum value for sanity and add 20%
+    return ceil(1.2 * max(6, 1 + rgb))
 
 
 def get_powers(p):
@@ -219,11 +218,20 @@ def griffin_sponge(parameters, input_sequence, output_length):
 
 p = 2**64 - 2**32 + 1  # STARK-friendly Goldilocks field
 S = 128  # Security level
-t = 8  # Number of base field elements
+t = 12  # Number of base field elements
 c = 4  # Number of elements dedicated to the capacity
 p, t, capacity, security_level, d, dinv, N, mat, alphas, betas, round_constants = griffin_parameters(
     p, t, c, S)
-# The MDS matrix is changed for optimized linear layer in the frequency domain
-# See https://github.com/novifinancial/winterfell/pull/104
-mat = matrix.circulant([23, 8, 13, 10, 7, 6, 21, 8])
 parameters = p, t, capacity, security_level, d, dinv, N, mat, alphas, betas, round_constants
+
+# Test vectors
+Fp = GF(p)
+L = [[0 for i in range(8)], [1 for i in range(8)]]
+for j in range(10):
+    L.append([Fp.random_element() for i in range(8)])
+print(L)
+
+R = []
+for l in L:
+    R.append(griffin_sponge(parameters, l, 4))
+print(R)
