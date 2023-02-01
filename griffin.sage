@@ -183,7 +183,7 @@ def griffin_sponge(parameters, input_sequence, output_length):
     # initialize state to all zeros then conditionally set the first capacity register to one
     state = matrix([[Fp(0)] for i in range(t)])
     if length % rate != 0:
-        state[capacity, 0] += 1
+        state[rate, 0] = 1
 
     if length % rate != 0:
         input_sequence.append(1)
