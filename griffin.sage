@@ -73,7 +73,7 @@ def get_matrix(p, t):
     if t == 3:
         return Matrix.circulant([2, 1, 1]).change_ring(Fp)
     if t == 4:
-        return Matrix.circulant([3, 2, 1, 1]).change_ring(Fp)
+        return Matrix([[5, 7, 1, 3], [4, 6, 1, 1], [1, 3, 5, 7], [1, 1, 4, 6]]).change_ring(Fp)
 
     # for larger cases, we split the matrix M as M' x M''
     # with M' a diagonal matrix and M'' a circulant one.
@@ -81,7 +81,7 @@ def get_matrix(p, t):
     assert t % 4 == 0
     tp = t // 4
 
-    Mt = Matrix.circulant([3, 2, 1, 1]).change_ring(Fp)
+    Mt = Matrix([[5, 7, 1, 3], [4, 6, 1, 1], [1, 3, 5, 7], [1, 1, 4, 6]]).change_ring(Fp)
     M1 = Matrix.zero(t, t)
     # put Mt on the diagonal of the larger matrix M1
     for i in range(tp):
